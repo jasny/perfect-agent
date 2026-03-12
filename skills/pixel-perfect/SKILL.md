@@ -320,39 +320,6 @@ until obvious differences are gone or a hard platform limitation blocks perfect 
 
 If blocked, document the limitation and the remaining discrepancy.
 
-## Measurement guidance
-
-### When a live demo is available
-
-Prefer direct measurement via browser automation.
-
-Typical methods:
-
-```
-query selectors for elements
-getBoundingClientRect for geometry
-getComputedStyle for visual values
-screenshot capture for comparison
-pixel sampling when needed for colors
-```
-
-Measure real values whenever possible.
-
-### When only screenshots are available
-
-Use visual measurement carefully.
-
-Guidance:
-
-```
-infer spacing from repeated patterns
-sample colors from flat regions
-estimate padding from repeated components
-validate visually after each pass
-```
-
-A screenshot-only source is less precise. Compensate with more validation passes.
-
 ## Definition of done
 
 The skill is done only when all of the following are true:
