@@ -205,9 +205,11 @@ asset_parity:
   fonts:
     required: ["Inter-Regular", "Inter-Bold"]
     available: ["Inter-Regular"]
+    unavailable: ["Inter-Bold"]
   icons:
     required: ["feather@4.29.0"]
     available: []
+    unavailable: ["feather@4.29.0"]
   missing_assets: ["Inter-Bold", "feather@4.29.0"]
   options_presented:
     - "User provides exact files"

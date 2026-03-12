@@ -50,8 +50,9 @@ When tradeoffs must be made, prioritize in this order:
 3. inner padding and gaps
 4. typography, font size, weight, line height
 5. colors, borders, radius, shadows
-6. icon size and placement
-7. interaction states and minor details
+6. asset parity for fonts and icons
+7. icon size and placement
+8. interaction states and minor details
 
 ## Input preference order
 
@@ -217,9 +218,7 @@ The specification must be concrete enough that another engineer could implement 
 Use the field-level schema and quality checks in `references/specification-playbook.md`.
 
 Phase 5 concept:
-- write a complete, measurement-driven implementation contract before coding
-- make the spec executable by another engineer without seeing the reference
-- separate measured facts from estimates and note refinement needs
+- produce a complete, measurement-driven implementation contract before coding
 
 Required sections:
 
