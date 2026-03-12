@@ -60,7 +60,6 @@ When tradeoffs must be made, prioritize in this order:
 - Figma preview
 - clickable demo
 - live website
-- video frame capture, if only a frame is needed
 
 ## Required output
 
@@ -81,7 +80,9 @@ Use these references for detailed execution guidance:
 
 - `references/report-template.md`
 - `references/responsive-scope-playbook.md`
-- `references/measurement-playbook.md`
+- `references/measurement-playwright.md`
+- `references/measurement-image.md`
+- `references/specification-playbook.md`
 - `references/validation-playbook.md`
 
 ## Workflow
@@ -98,7 +99,7 @@ If there is a live inspectable source, use that as the primary measurement sourc
 If there is only an image, use screenshot-based measurement.
 If both exist, use DOM inspection for exact values and screenshots for visual confirmation.
 
-### Phase 1.5, select responsive validation scope
+### Phase 2, select responsive validation scope
 
 Select required viewports before implementation starts.
 Use the deterministic scope and classification rules in `references/responsive-scope-playbook.md`.
@@ -111,12 +112,12 @@ Minimum requirements:
 - validation must pass at every required viewport in the selected set
 - any deviation from defaults must be explicitly justified in the report
 
-### Phase 2, inspect and measure
+### Phase 3, inspect and measure
 
 #### Mode A, live inspectable source
 
 Use browser tooling such as Playwright to inspect the rendered UI directly.
-Use the exact measurement sequence in `references/measurement-playbook.md`.
+Use the exact measurement sequence in `references/measurement-playwright.md`.
 
 Measure and record:
 
@@ -159,7 +160,7 @@ Measure first.
 #### Mode B, screenshot or image only
 
 When the design is only available as an image, infer structure and measure visually.
-Use the screenshot-only procedure in `references/measurement-playbook.md`.
+Use the screenshot-only procedure in `references/measurement-image.md`.
 
 Determine:
 
@@ -177,7 +178,7 @@ Determine:
 
 Use repeated screenshot comparison during implementation to refine uncertain values.
 
-### Phase 3, write the execution plan
+### Phase 4, write the execution plan
 
 Before writing the detailed specification, write a concise execution plan.
 
@@ -201,227 +202,34 @@ Risk: native font rendering may differ slightly from browser rendering
 
 Keep the plan short. It is an execution plan, not the full specification.
 
-### Phase 4, write the detailed implementation specification
+### Phase 5, write the detailed implementation specification
 
 Create a measurement-based UI spec before coding.
 
 The specification must be concrete enough that another engineer could implement the screen without seeing the original reference.
+Use the field-level schema and quality checks in `references/specification-playbook.md`.
 
-The specification should contain the following sections.
+Phase 5 concept:
+- write a complete, measurement-driven implementation contract before coding
+- make the spec executable by another engineer without seeing the reference
+- separate measured facts from estimates and note refinement needs
 
-#### 1. Screen metadata
+Required sections:
 
-Include:
+1. `Screen metadata`: defines target environment and global layout behavior.
+2. `Component hierarchy`: defines structural tree and naming used across implementation and validation.
+3. `Section-by-section measurements`: defines geometry, spacing, alignment, and surface styling per major section.
+4. `Typography spec`: defines exact text rendering rules for key text elements.
+5. `Color palette`: defines concrete color values and gradients used by the screen.
+6. `Border and radius spec`: defines borders, corner radii, and divider treatments.
+7. `Iconography spec`: defines icon asset, size, placement, and style details.
+8. `Asset parity + user decisions`: records font/icon availability and user-approved fallback decisions.
+9. `Interaction and state notes`: defines visible state-dependent styling/layout behavior.
+10. `Platform translation notes`: documents renderer translation constraints without redesign.
 
-- target viewport or device size
-- orientation
-- safe area behavior
-- background color
-- whether the screen scrolls
-- whether sections are fixed, sticky, or static
+For required fields and example outputs for each section, use `references/specification-playbook.md`.
 
-#### 2. Component hierarchy
-
-Represent the visual structure as a tree so the spatial relationship between components is clear.
-
-Example:
-
-```
-Screen
- ├ Header
- │  ├ BackButton
- │  ├ Title
- │  └ SettingsButton
- ├ BalanceCard
- │  ├ BalanceLabel
- │  ├ BalanceAmount
- │  └ DeltaRow
- ├ ActionRow
- │  ├ SendButton
- │  └ ReceiveButton
- ├ TokenInfoCard
- │  ├ ContractRow
- │  └ PriceRow
- └ ActivitySection
-    ├ ActivityHeader
-    └ ActivityList
-       ├ ActivityRow
-       ├ ActivityRow
-       └ ActivityRow
-```
-
-#### 3. Section-by-section measurements
-
-For every major section specify exact or estimated values.
-
-Example:
-
-```
-BalanceCard
-width: viewport minus 40
-margin-top: 24
-margin-horizontal: 20
-padding-top: 24
-padding-bottom: 24
-padding-horizontal: 24
-border-radius: 24
-background: linear gradient #5B5CE6 → #7A3FF2
-shadow: subtle, low blur, low offset
-```
-
-For each section include:
-
-- width
-- height, if fixed
-- margin-top
-- margin-bottom
-- margin-left
-- margin-right
-- padding-top
-- padding-bottom
-- padding-left
-- padding-right
-- gap between children
-- alignment
-- border radius
-- border
-- background
-- shadow
-
-#### 4. Typography spec
-
-For every visible text element define:
-
-- content or role
-- font family if known
-- font size
-- font weight
-- line height
-- letter spacing if relevant
-- color
-- alignment
-- casing if stylistic
-
-Example:
-
-```
-BalanceAmount
-font-size: 34
-font-weight: 700
-line-height: 40
-color: #FFFFFF
-alignment: left
-
-SectionLabel
-font-size: 14
-font-weight: 500
-line-height: 18
-color: #6B7280
-```
-
-#### 5. Color palette
-
-List all measured or sampled colors used on the screen.
-
-Example:
-
-```
-Primary: #5B5CE6
-Accent: #7A3FF2
-TextPrimary: #111827
-TextSecondary: #6B7280
-Background: #FFFFFF
-Border: #E5E7EB
-```
-
-Do not replace these with approximate theme tokens. Record the actual values.
-
-#### 6. Border and radius spec
-
-Example:
-
-```
-Card radius: 24
-Button radius: 12
-Divider thickness: 1
-Divider color: #E5E7EB
-```
-
-#### 7. Iconography spec
-
-Specify:
-
-- icon size
-- icon stroke or fill feel
-- placement
-- spacing between icon and text
-- directional meaning if relevant
-
-Example:
-
-```
-Send icon: arrow up-right
-Receive icon: arrow down-left
-Icon size: 20
-Icon spacing from label: 8
-```
-
-#### 8. Asset parity and fallback decision
-
-For fonts and icons, document source assets and parity status before implementation.
-
-Include:
-
-- exact font family names and font files used by the reference, if available
-- exact icon pack, icon version, and glyph names, if available
-- whether each required asset is available in the target environment
-- for each missing asset, at least one fallback option with expected visual impact
-
-Fallback policy:
-
-- do not automatically choose font or icon fallbacks
-- when an exact asset is unavailable, ask the user to choose how to proceed
-- present concise options, for example:
-  - provide exact asset files
-  - approve a specified fallback asset
-  - proceed with placeholder only for temporary implementation
-- record the user decision in the specification and validation report
-
-#### 9. Interaction and state notes
-
-Specify visible interaction behavior that affects layout or styling.
-
-Example:
-
-```
-SendButton
-height: 48
-background: gradient
-text color: white
-radius: 12
-
-ReceiveButton
-height: 48
-background: white
-border: 2px accent color
-text color: accent
-radius: 12
-```
-
-#### 10. Platform translation notes
-
-Example:
-
-```
-React Native notes
-- CSS box-shadow approximated using RN shadow props
-- gradients require LinearGradient component
-- viewport width mapped to simulator width
-```
-
-These notes document translation constraints but do not allow redesign.
-
-### Phase 5, implement from the specification
+### Phase 6, implement from the specification
 
 Write code using the specification as the source of truth.
 
@@ -440,7 +248,7 @@ Rules:
 
 If the source uses odd values such as 23px or 18px, keep them.
 
-### Phase 6, run and capture
+### Phase 7, run and capture
 
 Run the implementation in the correct target environment.
 
@@ -452,7 +260,7 @@ For each required viewport in the selected viewport set, capture screenshots of:
 
 Use the exact viewport size declared in the plan for each pass.
 
-### Phase 7, visual validation
+### Phase 8, visual validation
 
 Compare the implementation screenshots against the reference for each required viewport.
 
@@ -494,7 +302,7 @@ Profile selection rules:
 For every run, report the selected profile and why it was selected before reporting metrics.
 For every run, report viewport-level metrics for every required viewport.
 
-### Phase 8, refine
+### Phase 9, refine
 
 Adjust the code to remove visible mismatches.
 
