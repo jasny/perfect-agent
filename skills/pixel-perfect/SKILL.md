@@ -53,13 +53,21 @@ When tradeoffs must be made, prioritize in this order:
 6. icon size and placement
 7. interaction states and minor details
 
-## Accepted inputs
+## Input preference order
 
-- screenshot
-- image export
-- Figma preview
-- clickable demo
-- live website
+Accepted input types in priority order:
+
+1. live website
+2. clickable demo
+3. Figma preview
+4. image export
+5. screenshot
+
+Rules:
+
+- use the highest-priority available source as the primary measurement source
+- use lower-priority sources only as supplemental visual confirmation when needed
+- if only one source is provided, use that source
 
 ## Required output
 
@@ -93,11 +101,9 @@ Determine which of these applies:
 
 - live inspectable source
 - static visual source only
-- mixed source, such as screenshot plus live demo
 
 If there is a live inspectable source, use that as the primary measurement source.
 If there is only an image, use screenshot-based measurement.
-If both exist, use DOM inspection for exact values and screenshots for visual confirmation.
 
 ### Phase 2, select responsive validation scope
 
