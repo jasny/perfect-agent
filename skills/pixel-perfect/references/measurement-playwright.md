@@ -6,22 +6,25 @@
 
 ## Procedure
 1. Set target viewport.
-2. Capture baseline screenshots for full viewport and major sections.
-3. Identify major containers/components in DOM.
-4. Measure geometry using `getBoundingClientRect`.
+2. Wait for stable DOM/render state before measurement and capture.
+   - Ensure initial loading has completed.
+   - Ensure no visible layout shifts are occurring.
+3. Capture baseline screenshots for full viewport and major sections.
+4. Identify major containers/components in DOM.
+5. Measure geometry using `getBoundingClientRect`.
    - Record `x`, `y`, `width`, `height`.
    - Record parent-child offsets.
-5. Measure styling using `getComputedStyle`.
+6. Measure styling using `getComputedStyle`.
    - Typography: family, size, weight, line-height, letter-spacing, color.
    - Visual: background, gradient, border, radius, shadow, opacity.
-6. Measure spacing rules.
+7. Measure spacing rules.
    - Margins, padding, and inter-element gaps.
    - Alignment and distribution rules.
-7. Measure behavior-related layout factors.
+8. Measure behavior-related layout factors.
    - Scroll behavior.
    - Sticky/fixed positioning.
-8. Capture section-level screenshots for dense or fragile areas.
-9. Build the measurement spec from measured values before coding.
+9. Capture section-level screenshots for dense or fragile areas.
+10. Build the measurement spec from measured values before coding.
 
 ## Required Measurement Record (minimum fields)
 - `element_id`
