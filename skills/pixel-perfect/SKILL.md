@@ -73,6 +73,18 @@ This skill must produce four things during execution:
 
 The agent must not jump straight into coding without first creating the specification.
 
+Use the following minimum report schema to keep outputs consistent while staying concise:
+
+1. `Execution Plan`
+2. `Viewport Set + Profile Selection`
+3. `Measurement Spec`
+4. `Asset Parity + User Decisions`
+5. `Implementation Notes`
+6. `Validation Results (per viewport)`
+7. `Open Mismatches or Blockers`
+
+These are required headings. The content under each heading may be brief.
+
 ## Workflow
 
 ### Phase 1, identify source type
@@ -86,6 +98,43 @@ Determine which of these applies:
 If there is a live inspectable source, use that as the primary measurement source.
 If there is only an image, use screenshot-based measurement.
 If both exist, use DOM inspection for exact values and screenshots for visual confirmation.
+
+### Phase 1.5, select responsive validation scope
+
+Select required viewports before implementation starts.
+
+Rules:
+
+- if the user provides explicit viewports or devices, use exactly those
+- if the user does not provide viewports, use the default viewport sets below
+- write the selected viewport set in the execution plan
+- validation must pass at every required viewport in the selected set
+
+Viewport sets:
+
+- `web-responsive` (default for responsive web sources): 390x844, 768x1024, 1280x800, 1920x1080
+- `web-fixed` (default for fixed-size or single-breakpoint web sources): reference or target viewport plus 1920x1080 safety check
+- `mobile-nonadaptive` (default for native screens without adaptive layout): one canonical device viewport only
+- `mobile-adaptive` (default for native screens with adaptive layout): one phone viewport plus one larger-class viewport
+
+Classification rules:
+
+- use `web-responsive` when layout structure changes across widths, such as nav collapse, column count change, or major reflow
+- use `web-fixed` when structure does not change and source appears fixed-size
+- use `mobile-adaptive` when adaptive behavior is visible or explicitly required
+- otherwise use `mobile-nonadaptive`
+
+Default canonical mobile viewports:
+
+- iOS phone: 390x844
+- Android phone: 412x915
+- iOS larger class: 1024x1366
+- Android larger class: 1280x800
+
+Consistency requirements:
+
+- record source classification, selected viewport set, and selection reason in the plan
+- any deviation from defaults must be explicitly justified in the report
 
 ### Phase 2, inspect and measure
 
@@ -340,7 +389,28 @@ Icon size: 20
 Icon spacing from label: 8
 ```
 
-#### 8. Interaction and state notes
+#### 8. Asset parity and fallback decision
+
+For fonts and icons, document source assets and parity status before implementation.
+
+Include:
+
+- exact font family names and font files used by the reference, if available
+- exact icon pack, icon version, and glyph names, if available
+- whether each required asset is available in the target environment
+- for each missing asset, at least one fallback option with expected visual impact
+
+Fallback policy:
+
+- do not automatically choose font or icon fallbacks
+- when an exact asset is unavailable, ask the user to choose how to proceed
+- present concise options, for example:
+  - provide exact asset files
+  - approve a specified fallback asset
+  - proceed with placeholder only for temporary implementation
+- record the user decision in the specification and validation report
+
+#### 9. Interaction and state notes
 
 Specify visible interaction behavior that affects layout or styling.
 
@@ -361,7 +431,7 @@ text color: accent
 radius: 12
 ```
 
-#### 9. Platform translation notes
+#### 10. Platform translation notes
 
 Example:
 
@@ -388,6 +458,8 @@ Rules:
 - do not change font sizes to "more standard" values
 - do not make buttons more balanced or modern
 - do not remove or add detail
+- do not auto-select fallback fonts or icon packs when exact assets are missing
+- implement fallback assets only after explicit user approval is recorded in the specification
 
 If the source uses odd values such as 23px or 18px, keep them.
 
@@ -395,17 +467,17 @@ If the source uses odd values such as 23px or 18px, keep them.
 
 Run the implementation in the correct target environment.
 
-Capture screenshots of:
+For each required viewport in the selected viewport set, capture screenshots of:
 
 - the full screen
 - each major section
 - any area that visually differs from the reference
 
-Use the same viewport size used in the specification.
+Use the exact viewport size declared in the plan for each pass.
 
 ### Phase 7, visual validation
 
-Compare the implementation screenshots against the reference.
+Compare the implementation screenshots against the reference for each required viewport.
 
 Check specifically for:
 
@@ -425,6 +497,48 @@ Check specifically for:
 - row density mismatch
 - alignment drift
 
+Also run objective diff checks and record numeric results.
+
+Validation profiles:
+
+`lenient` (allowed only when explicitly justified)
+- global pixel difference across full-screen comparison: less than or equal to 3.5 percent
+- per-section pixel difference for each major section (header, primary cards, main action area, list area): less than or equal to 2.5 percent
+- text baseline or text block position drift for key text elements (title, primary numeric value, section headers, button labels): less than or equal to 3 px
+- spacing deltas for key measured gaps and paddings: less than or equal to 2 px
+- sampled key color mismatch tolerance for core colors (primary text, secondary text, primary background, accent, border): deltaE less than or equal to 4
+
+`portable` (default for cross-renderer work)
+- global pixel difference: less than or equal to 1.5 percent
+- per-section pixel difference: less than or equal to 1.0 percent
+- text baseline drift: less than or equal to 2 px
+- spacing deltas: less than or equal to 1 px
+- color deltaE: less than or equal to 2.5
+
+`strict` (default for same-renderer work)
+- global pixel difference: less than or equal to 0.8 percent
+- per-section pixel difference: less than or equal to 0.5 percent
+- text baseline drift: less than or equal to 1 px
+- spacing deltas: less than or equal to 1 px
+- color deltaE: less than or equal to 1.5
+
+`ultra` (opt-in only, never default)
+- global pixel difference: less than or equal to 0.4 percent
+- per-section pixel difference: less than or equal to 0.25 percent
+- text baseline drift: less than or equal to 0.5 px
+- spacing deltas: less than or equal to 0.5 px
+- color deltaE: less than or equal to 1.0
+
+Profile selection rules:
+
+- use `strict` by default when source and target use effectively the same renderer and font stack
+- use `portable` by default when source and target render differently, such as browser to React Native
+- use `ultra` only when the user explicitly asks for it and conditions are controlled (same renderer version, same OS, same DPR, same fonts, same capture pipeline)
+- use `lenient` only when hard constraints prevent higher-fidelity matching; record the exact blocker and why higher profiles are not achievable
+
+For every run, report the selected profile and why it was selected before reporting metrics.
+For every run, report viewport-level metrics for every required viewport.
+
 Example mismatch report:
 
 ```
@@ -433,6 +547,20 @@ Balance amount font appears smaller than reference
 Primary gradient too blue and insufficiently purple
 Action buttons 6px too tall
 Token info card bottom padding too large
+```
+
+Example validation summary:
+
+```
+Viewport: 390x844
+Profile: portable (source browser, target React Native)
+Global pixel difference: 1.2% (pass, threshold 1.5%)
+Header section difference: 0.8% (pass, threshold 1.0%)
+Balance card section difference: 1.4% (fail, threshold 1.0%)
+Primary title baseline drift: 1px (pass, threshold 2px)
+Balance amount baseline drift: 3px (fail, threshold 2px)
+Primary background deltaE: 1.6 (pass, threshold 2.5)
+Accent color deltaE: 2.1 (pass, threshold 2.5)
 ```
 
 ### Phase 8, refine
@@ -494,7 +622,12 @@ The skill is done only when all of the following are true:
 2. A detailed measurement-based UI specification exists.
 3. The UI is implemented in code.
 4. The rendered output has been compared visually to the reference.
-5. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
+5. A validation profile is selected using the profile selection rules and is recorded in the report.
+6. Objective validation metrics are recorded and all required thresholds pass for the selected profile.
+7. If `lenient` is used, the blocker and reason are explicitly documented.
+8. Asset parity status for fonts and icons is documented, and any fallback usage has explicit user approval recorded.
+9. All required viewports in the selected viewport set pass validation.
+10. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
 
 "Roughly similar" is not done.
 "Good enough" is not done.
@@ -509,6 +642,7 @@ Do not do any of the following:
 - use generic spacing like 16 everywhere because it feels right
 - use default font sizes because they are close
 - replace measured colors with theme colors
+- auto-pick font or icon fallbacks without user approval
 - make subjective UX improvements
 - stop after the first pass
 - declare success without screenshot comparison
@@ -537,4 +671,3 @@ This skill turns a vague prompt like "copy this design" into a strict process:
 - refine until matched
 
 This skill does not ask the agent to be creative. It asks the agent to be precise.
-
