@@ -1,3 +1,13 @@
+---
+name: pixel-perfect
+description: >-
+  Reproduce a UI as exactly as possible from a reference (Figma, live source, screenshot, or image).
+  TRIGGER when: user wants to copy a design exactly, reproduce a screen from a screenshot, clone a
+  Figma design, match spacing/colors/typography in detail, or port a design to another framework
+  without changing the look. DO NOT TRIGGER for redesigns, loose "something like this" requests,
+  or UX improvement tasks.
+---
+
 # pixel-perfect
 
 A skill for reproducing a UI as exactly as possible from a screenshot, image, Figma preview/export, clickable demo, or live website.
