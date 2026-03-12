@@ -19,17 +19,17 @@ Use these exact headings in this exact order.
 ## Measurement Spec
 - Screen metadata:
 - Component hierarchy:
-- Section measurements:
-- Typography:
-- Colors:
-- Borders/radius/shadows:
-- Iconography:
-- Interaction/state notes:
+- Section-by-section measurements:
+- Typography spec:
+- Color palette:
+- Border and radius spec:
+- Iconography spec:
+- Asset parity + user decisions:
+- Interaction and state notes:
 - Platform translation notes:
 
 ## Asset Parity + User Decisions
-- Fonts found:
-- Icons found:
+- Decision summary (must match Measurement Spec section 8):
 - Missing assets:
 - Fallback options presented:
 - User decision (required when assets are missing):
