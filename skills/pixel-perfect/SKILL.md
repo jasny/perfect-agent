@@ -58,9 +58,9 @@ When tradeoffs must be made, prioritize in this order:
 
 Accepted input types in priority order:
 
-1. live website
-2. clickable demo
-3. Figma preview
+1. Figma inspectable source
+2. live website
+3. clickable demo
 4. image export
 5. screenshot
 
@@ -68,6 +68,7 @@ Rules:
 
 - use the highest-priority available source as the primary measurement source
 - use lower-priority sources only as supplemental visual confirmation when needed
+- use runtime sources for behavior and state confirmation when those details are not represented in Figma
 - if only one source is provided, use that source
 
 ## Required output
@@ -92,6 +93,7 @@ Use these references for detailed execution guidance:
 - `references/measurement-playbook.md` (index)
 - `references/measurement-playwright.md`
 - `references/measurement-image.md`
+- `references/measurement-figma.md`
 - `references/specification-playbook.md`
 - `references/validation-playbook.md`
 
@@ -102,9 +104,11 @@ Use these references for detailed execution guidance:
 Determine which of these applies:
 
 - live inspectable source
+- Figma inspectable source
 - static visual source only
 
 If there is a live inspectable source, use that as the primary measurement source.
+If there is a Figma inspectable source, use Figma inspect data as the primary measurement source.
 If there is only an image, use screenshot-based measurement.
 
 ### Phase 2, select responsive validation scope
@@ -185,6 +189,13 @@ Determine:
 - alignment pattern and grid rhythm
 
 Use repeated screenshot comparison during implementation to refine uncertain values.
+
+#### Mode C, Figma source
+
+When the source is a Figma preview or file with inspect access, measure from Figma inspect data.
+Use the Figma procedure in `references/measurement-figma.md`.
+
+Measure from inspect values first, then use exported or captured frame images for visual confirmation.
 
 ### Phase 4, write the execution plan
 
