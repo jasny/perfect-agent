@@ -3,7 +3,7 @@
 ## Validation Sequence
 1. Select validation profile (`lenient`, `portable`, `strict`, `ultra`) using skill rules.
 2. Run validation at every required viewport.
-3. Capture full screen and major sections at each viewport.
+3. Wait for stable DOM/render state, then capture full screen and major sections at each viewport.
 4. Compare implementation vs reference and compute required metrics.
 5. Report pass/fail per viewport and overall status.
 6. Refine until all required thresholds pass.
@@ -91,6 +91,13 @@ The script computes and reports these metrics:
 - Sample pixel at `(x, y)` in both images.
 - Convert RGB to Lab.
 - Compute CIE76 deltaE.
+
+## Dynamic Region Handling
+If a region cannot be stabilized (for example live clocks, tickers, or remote dynamic content):
+
+1. Document the region explicitly with coordinates and reason.
+2. Exclude that region from metric computation inputs (`sections.json`, `text_checks.json`, `spacing_checks.json`, `color_checks.json`).
+3. Keep the same validation profile; do not downgrade profile strictness because of dynamic regions.
 
 ## Required Metrics
 - Global pixel difference
