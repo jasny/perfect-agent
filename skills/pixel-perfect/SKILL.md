@@ -259,6 +259,17 @@ If the source uses odd values such as 23px or 18px, keep them.
 
 Run the implementation in the correct target environment.
 
+Use the environment setup defined in the execution plan. Do not switch target environment during validation.
+
+Run checklist:
+
+- confirm the target type from the plan (`web`, `react-native`, or other declared target)
+- start the target in a stable run mode suitable for screenshot capture
+- ensure target fonts and icon assets match the approved asset parity decision
+- disable animations/transitions before capture when possible to reduce frame variance
+- set each required viewport exactly as declared in the plan
+- capture all required screenshots for each viewport
+
 For each required viewport in the selected viewport set, capture screenshots of:
 
 - the full screen
