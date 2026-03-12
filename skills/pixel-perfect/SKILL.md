@@ -88,6 +88,7 @@ Use these references for detailed execution guidance:
 
 - `references/report-template.md`
 - `references/responsive-scope-playbook.md`
+- `references/measurement-playbook.md` (index)
 - `references/measurement-playwright.md`
 - `references/measurement-image.md`
 - `references/specification-playbook.md`
