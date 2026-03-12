@@ -6,5 +6,4 @@ Use one of these mode-specific playbooks:
 
 - `measurement-playwright.md` for live inspectable sources
 - `measurement-image.md` for screenshot-only sources
-
-Future measurement modes, such as direct Figma file measurement, should be added as separate playbooks in this folder.
+- `measurement-figma.md` for Figma inspectable sources
