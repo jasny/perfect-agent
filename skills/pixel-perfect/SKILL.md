@@ -73,17 +73,16 @@ This skill must produce four things during execution:
 
 The agent must not jump straight into coding without first creating the specification.
 
-Use the following minimum report schema to keep outputs consistent while staying concise:
+Use the report heading schema in `references/report-template.md`.
 
-1. `Execution Plan`
-2. `Viewport Set + Profile Selection`
-3. `Measurement Spec`
-4. `Asset Parity + User Decisions`
-5. `Implementation Notes`
-6. `Validation Results (per viewport)`
-7. `Open Mismatches or Blockers`
+## References
 
-These are required headings. The content under each heading may be brief.
+Use these references for detailed execution guidance:
+
+- `references/report-template.md`
+- `references/responsive-scope-playbook.md`
+- `references/measurement-playbook.md`
+- `references/validation-playbook.md`
 
 ## Workflow
 
@@ -102,38 +101,14 @@ If both exist, use DOM inspection for exact values and screenshots for visual co
 ### Phase 1.5, select responsive validation scope
 
 Select required viewports before implementation starts.
+Use the deterministic scope and classification rules in `references/responsive-scope-playbook.md`.
 
-Rules:
+Minimum requirements:
 
 - if the user provides explicit viewports or devices, use exactly those
-- if the user does not provide viewports, use the default viewport sets below
-- write the selected viewport set in the execution plan
-- validation must pass at every required viewport in the selected set
-
-Viewport sets:
-
-- `web-responsive` (default for responsive web sources): 390x844, 768x1024, 1280x800, 1920x1080
-- `web-fixed` (default for fixed-size or single-breakpoint web sources): reference or target viewport plus 1920x1080 safety check
-- `mobile-nonadaptive` (default for native screens without adaptive layout): one canonical device viewport only
-- `mobile-adaptive` (default for native screens with adaptive layout): one phone viewport plus one larger-class viewport
-
-Classification rules:
-
-- use `web-responsive` when layout structure changes across widths, such as nav collapse, column count change, or major reflow
-- use `web-fixed` when structure does not change and source appears fixed-size
-- use `mobile-adaptive` when adaptive behavior is visible or explicitly required
-- otherwise use `mobile-nonadaptive`
-
-Default canonical mobile viewports:
-
-- iOS phone: 390x844
-- Android phone: 412x915
-- iOS larger class: 1024x1366
-- Android larger class: 1280x800
-
-Consistency requirements:
-
+- otherwise classify source and choose the default viewport set from the playbook
 - record source classification, selected viewport set, and selection reason in the plan
+- validation must pass at every required viewport in the selected set
 - any deviation from defaults must be explicitly justified in the report
 
 ### Phase 2, inspect and measure
@@ -141,6 +116,7 @@ Consistency requirements:
 #### Mode A, live inspectable source
 
 Use browser tooling such as Playwright to inspect the rendered UI directly.
+Use the exact measurement sequence in `references/measurement-playbook.md`.
 
 Measure and record:
 
@@ -183,6 +159,7 @@ Measure first.
 #### Mode B, screenshot or image only
 
 When the design is only available as an image, infer structure and measure visually.
+Use the screenshot-only procedure in `references/measurement-playbook.md`.
 
 Determine:
 
@@ -498,36 +475,14 @@ Check specifically for:
 - alignment drift
 
 Also run objective diff checks and record numeric results.
+Use the validation flow and reporting format in `references/validation-playbook.md`.
 
 Validation profiles:
 
-`lenient` (allowed only when explicitly justified)
-- global pixel difference across full-screen comparison: less than or equal to 3.5 percent
-- per-section pixel difference for each major section (header, primary cards, main action area, list area): less than or equal to 2.5 percent
-- text baseline or text block position drift for key text elements (title, primary numeric value, section headers, button labels): less than or equal to 3 px
-- spacing deltas for key measured gaps and paddings: less than or equal to 2 px
-- sampled key color mismatch tolerance for core colors (primary text, secondary text, primary background, accent, border): deltaE less than or equal to 4
-
-`portable` (default for cross-renderer work)
-- global pixel difference: less than or equal to 1.5 percent
-- per-section pixel difference: less than or equal to 1.0 percent
-- text baseline drift: less than or equal to 2 px
-- spacing deltas: less than or equal to 1 px
-- color deltaE: less than or equal to 2.5
-
-`strict` (default for same-renderer work)
-- global pixel difference: less than or equal to 0.8 percent
-- per-section pixel difference: less than or equal to 0.5 percent
-- text baseline drift: less than or equal to 1 px
-- spacing deltas: less than or equal to 1 px
-- color deltaE: less than or equal to 1.5
-
-`ultra` (opt-in only, never default)
-- global pixel difference: less than or equal to 0.4 percent
-- per-section pixel difference: less than or equal to 0.25 percent
-- text baseline drift: less than or equal to 0.5 px
-- spacing deltas: less than or equal to 0.5 px
-- color deltaE: less than or equal to 1.0
+- `lenient` (allowed only when explicitly justified)
+- `portable` (default for cross-renderer work)
+- `strict` (default for same-renderer work)
+- `ultra` (opt-in only, never default)
 
 Profile selection rules:
 
@@ -538,30 +493,6 @@ Profile selection rules:
 
 For every run, report the selected profile and why it was selected before reporting metrics.
 For every run, report viewport-level metrics for every required viewport.
-
-Example mismatch report:
-
-```
-Header top padding is 4px too large
-Balance amount font appears smaller than reference
-Primary gradient too blue and insufficiently purple
-Action buttons 6px too tall
-Token info card bottom padding too large
-```
-
-Example validation summary:
-
-```
-Viewport: 390x844
-Profile: portable (source browser, target React Native)
-Global pixel difference: 1.2% (pass, threshold 1.5%)
-Header section difference: 0.8% (pass, threshold 1.0%)
-Balance card section difference: 1.4% (fail, threshold 1.0%)
-Primary title baseline drift: 1px (pass, threshold 2px)
-Balance amount baseline drift: 3px (fail, threshold 2px)
-Primary background deltaE: 1.6 (pass, threshold 2.5)
-Accent color deltaE: 2.1 (pass, threshold 2.5)
-```
 
 ### Phase 8, refine
 
