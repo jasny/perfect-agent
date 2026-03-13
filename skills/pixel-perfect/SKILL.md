@@ -51,6 +51,11 @@ Do not use this skill when the user wants:
 9. Do not stop at "close enough" if obvious differences remain.
 10. Prefer fidelity over framework convention.
 
+## Normative terms
+
+- `MUST` and `MUST NOT` are hard requirements.
+- `SHOULD` is a strong default that may be overridden only with explicit justification in the report.
+
 ## Priority order
 
 When tradeoffs must be made, prioritize in this order:
@@ -256,7 +261,22 @@ Required sections:
 
 For required fields and example outputs for each section, use `references/specification-playbook.md`.
 
-### Phase 6, implement from the specification
+### Phase 6, acceptance contract (mandatory before implementation)
+
+Before implementation starts, the report MUST include an acceptance contract with:
+
+- `Must-match list`: annotated design decisions that are non-negotiable
+- `Ignore list`: explicitly allowed mismatches
+- `Portable-allowed drift`: renderer-only drift allowances
+
+Rules:
+
+- implementation MUST NOT start before this contract is recorded
+- if user-marked comparison screenshots are provided, those annotations MUST be reflected in the `Must-match list`
+- if the screen is data-driven, copy/content mismatches SHOULD be excluded unless they affect layout, spacing, overflow, or wrapping
+- all exclusions MUST be explicitly listed in the `Ignore list`
+
+### Phase 7, implement from the specification
 
 Write code using the specification as the source of truth.
 
@@ -272,10 +292,11 @@ Rules:
 - do not remove or add detail
 - do not auto-select fallback fonts or icon packs when exact assets are missing
 - implement fallback assets only after explicit user approval is recorded in the specification
+- if the reference uses a recognizably different icon family, you MUST either adopt that icon family or obtain explicit user approval before substantial implementation
 
 If the source uses odd values such as 23px or 18px, keep them.
 
-### Phase 7, run and capture
+### Phase 8, run and capture
 
 Run the implementation in the correct target environment.
 
@@ -298,7 +319,7 @@ For each required viewport in the selected viewport set, capture screenshots of:
 
 Use the exact viewport size declared in the plan for each pass.
 
-### Phase 8, visual validation
+### Phase 9, visual validation
 
 Compare the implementation screenshots against the reference for each required viewport.
 
@@ -337,10 +358,28 @@ Profile selection rules:
 - use `ultra` only when the user explicitly asks for it and conditions are controlled (same renderer version, same OS, same DPR, same fonts, same capture pipeline)
 - use `lenient` only when hard constraints prevent higher-fidelity matching; record the exact blocker and why higher profiles are not achievable
 
+Portable interpretation:
+
+- `portable` MUST allow only renderer-level drift
+- `portable` MUST NOT relax annotated design decisions in the `Must-match list`
+
+Validation artifact priority:
+
+- if user-marked comparison screenshots are provided, they MUST be treated as primary validation artifacts
+- generic visual impression SHOULD be used only as supplemental context
+
+Marked issue resolution:
+
+- every marked issue MUST end in exactly one status: `fixed`, `accepted_by_user`, or `renderer_only_drift`
+- the validation report MUST include a yes/no checklist entry for each marked issue
+- `renderer_only_drift` MUST include a brief reason
+- a report MUST NOT claim `validated` unless all marked issues have one of the required statuses
+- a report MUST NOT claim `validated` if it has not been updated after the latest visual changes
+
 For every run, report the selected profile and why it was selected before reporting metrics.
 For every run, report viewport-level metrics for every required viewport.
 
-### Phase 9, refine
+### Phase 10, refine
 
 Adjust the code to remove visible mismatches.
 
@@ -356,6 +395,8 @@ Repeat:
 
 until obvious differences are gone or a hard platform limitation blocks perfect replication.
 
+At least one full `capture -> compare -> fix -> re-capture` loop MUST occur after the last substantive UI edit.
+
 If blocked, document the limitation and the remaining discrepancy.
 
 ## Definition of done
@@ -370,8 +411,13 @@ The skill is done only when all of the following are true:
 6. Objective validation metrics are recorded and all required thresholds pass for the selected profile.
 7. If `lenient` is used, the blocker and reason are explicitly documented.
 8. Asset parity status for fonts and icons is documented, and any fallback usage has explicit user approval recorded.
-9. All required viewports in the selected viewport set pass validation.
-10. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
+9. The acceptance contract exists and includes `Must-match list`, `Ignore list`, and `Portable-allowed drift`.
+10. If user-marked comparison screenshots are provided, they are used as the primary validation artifact.
+11. Every marked issue is resolved as `fixed`, `accepted_by_user`, or `renderer_only_drift` with reason.
+12. The validation report is updated after the latest visual changes.
+13. At least one full `capture -> compare -> fix -> re-capture` loop has run after the last substantive UI edit.
+14. All required viewports in the selected viewport set pass validation.
+15. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
 
 "Roughly similar" is not done.
 "Good enough" is not done.
@@ -387,6 +433,8 @@ Do not do any of the following:
 - use default font sizes because they are close
 - replace measured colors with theme colors
 - auto-pick font or icon fallbacks without user approval
+- claim validation using a stale report from before the latest visual changes
+- ignore marked comparison screenshot issues without resolving them as `fixed`, `accepted_by_user`, or `renderer_only_drift`
 - make subjective UX improvements
 - stop after the first pass
 - declare success without screenshot comparison
