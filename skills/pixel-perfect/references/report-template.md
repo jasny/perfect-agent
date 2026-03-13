@@ -16,6 +16,11 @@ Use these exact headings in this exact order.
 - Selection reason:
 - Deviations from defaults:
 
+## Acceptance Contract
+- Must-match list:
+- Ignore list:
+- Portable-allowed drift:
+
 ## Measurement Spec
 - Screen metadata:
 - Component hierarchy:
@@ -41,6 +46,11 @@ Use these exact headings in this exact order.
 - Non-default styling decisions:
 - Blockers encountered:
 
+## Primary Validation Artifacts
+- Reference artifacts used:
+- Marked comparison screenshots used (if provided):
+- Why these artifacts are primary:
+
 ## Validation Results (per viewport)
 Repeat this block for each required viewport.
 
@@ -51,6 +61,17 @@ Repeat this block for each required viewport.
 - Spacing deltas:
 - Color deltaE checks:
 - Pass/fail summary:
+- Marked Issue Checklist:
+  - Issue id:
+  - Resolved (yes/no):
+  - Status (`fixed` | `accepted_by_user` | `renderer_only_drift`):
+  - Reason (required for `renderer_only_drift`):
+
+## Validation Freshness
+- Latest substantive UI edit reference:
+- Latest capture set reference:
+- Report generated after latest capture (yes/no):
+- Post-edit full loop completed (`capture -> compare -> fix -> re-capture`) (yes/no):
 
 ## Open Mismatches or Blockers
 - Remaining mismatch list:

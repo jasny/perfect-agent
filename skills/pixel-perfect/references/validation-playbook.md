@@ -2,11 +2,13 @@
 
 ## Validation Sequence
 1. Select validation profile (`lenient`, `portable`, `strict`, `ultra`) using skill rules.
-2. Run validation at every required viewport.
-3. Wait for stable DOM/render state, then capture full screen and major sections at each viewport.
-4. Compare implementation vs reference and compute required metrics.
-5. Report pass/fail per viewport and overall status.
-6. Refine until all required thresholds pass.
+2. Confirm validation artifact priority.
+3. Run validation at every required viewport.
+4. Wait for stable DOM/render state, then capture full screen and major sections at each viewport.
+5. Compare implementation vs reference and compute required metrics.
+6. Resolve marked issues with explicit statuses.
+7. Report pass/fail per viewport and overall status.
+8. Refine until all required thresholds pass.
 
 ## Canonical Tooling
 Use the script `../scripts/validate-visual.sh` as the canonical metric computation path.
@@ -38,6 +40,19 @@ Minimal run (global metric only):
   --implementation /path/to/implementation.png \
   --profile strict
 ```
+
+## Validation Artifact Priority
+When user-marked comparison screenshots are provided:
+
+1. They MUST be treated as primary validation artifacts.
+2. Marked issues MUST be explicitly tracked and resolved.
+3. Generic visual impression SHOULD only be used as supplemental context.
+
+## Portable Strictness
+`portable` mode:
+
+1. MUST allow renderer-level drift only.
+2. MUST NOT relax annotated design decisions from the `Must-match list`.
 
 ## Input Schemas
 `sections.json`
@@ -99,6 +114,11 @@ If a region cannot be stabilized (for example live clocks, tickers, or remote dy
 2. Exclude that region from metric computation inputs (`sections.json`, `text_checks.json`, `spacing_checks.json`, `color_checks.json`).
 3. Keep the same validation profile; do not downgrade profile strictness because of dynamic regions.
 
+For data-driven screens:
+
+1. Copy/content differences SHOULD be excluded unless they affect layout, spacing, overflow, or wrapping.
+2. Every exclusion MUST be listed in the `Ignore list`.
+
 ## Required Metrics
 - Global pixel difference
 - Per-section pixel difference
@@ -144,3 +164,20 @@ For each required viewport, report:
 4. Top mismatches and next action
 
 The script output JSON is the source of truth for numeric values.
+
+## Marked-Issue Resolution Protocol
+Each marked issue MUST end in exactly one status:
+
+- `fixed`
+- `accepted_by_user`
+- `renderer_only_drift`
+
+Rules:
+
+1. `renderer_only_drift` MUST include a brief reason.
+2. The validation report MUST include a yes/no checklist item for each marked issue.
+3. A report MUST NOT claim `validated` unless every marked issue has a final status.
+
+## Validation Freshness and Final Loop
+1. A report MUST NOT claim `validated` if it predates the latest visual changes.
+2. At least one full `capture -> compare -> fix -> re-capture` loop MUST occur after the last substantive UI edit.
