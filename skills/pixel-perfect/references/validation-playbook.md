@@ -165,6 +165,31 @@ For each required viewport, report:
 
 The script output JSON is the source of truth for numeric values.
 
+## Component-Property Validation Table
+For each required viewport, the report MUST include a component-property validation table.
+
+Required columns:
+
+- `component`
+- `property`
+- `desired_value`
+- `actual_value`
+- `drift`
+- `result`
+- `reason`
+
+Result values:
+
+- `good`
+- `bad`
+- `bad_with_reason`
+
+Rules:
+
+1. `reason` is required when result is `bad_with_reason`.
+2. `drift` MUST be explicit (numeric or clearly bounded textual drift if numeric is not possible).
+3. Properties that drive must-match design decisions SHOULD be represented as rows in this table.
+
 ## Marked-Issue Resolution Protocol
 Each marked issue MUST end in exactly one status:
 

@@ -38,6 +38,18 @@ Do not use this skill when the user wants:
 - a looser "something like this" implementation
 - UX improvements instead of replication
 
+## How to use this skill
+
+Use this skill as a strict execution loop:
+
+1. measure the reference once and create a concrete specification
+2. implement from that specification
+3. verify against the reference artifacts
+4. modify only the mismatched areas
+5. verify again
+
+Repeat steps 3 to 5 until every required issue is resolved (`fixed`, `accepted_by_user`, or `renderer_only_drift`) and the validation gates pass.
+
 ## Core rules
 
 1. The reference is ground truth.
@@ -372,6 +384,8 @@ Marked issue resolution:
 
 - every marked issue MUST end in exactly one status: `fixed`, `accepted_by_user`, or `renderer_only_drift`
 - the validation report MUST include a yes/no checklist entry for each marked issue
+- the validation report MUST include a component-property table with columns: component, property, desired value, actual value, drift, result, reason
+- each table row result MUST be one of: `good`, `bad`, `bad_with_reason`
 - `renderer_only_drift` MUST include a brief reason
 - a report MUST NOT claim `validated` unless all marked issues have one of the required statuses
 - a report MUST NOT claim `validated` if it has not been updated after the latest visual changes
@@ -396,6 +410,16 @@ Repeat:
 until obvious differences are gone or a hard platform limitation blocks perfect replication.
 
 At least one full `capture -> compare -> fix -> re-capture` loop MUST occur after the last substantive UI edit.
+The refine loop MUST run at least once and MUST NOT run more than 10 times.
+
+If unresolved mismatches remain after 10 loops, the report MUST include a detailed unresolved section with:
+
+- each unresolved issue
+- current desired vs actual state
+- what was tried
+- why the issue is hard to fix
+- whether it is likely renderer-only, asset-limited, data-limited, or implementation-limited
+- the recommended next action for each unresolved issue
 
 If blocked, document the limitation and the remaining discrepancy.
 
@@ -416,8 +440,9 @@ The skill is done only when all of the following are true:
 11. Every marked issue is resolved as `fixed`, `accepted_by_user`, or `renderer_only_drift` with reason.
 12. The validation report is updated after the latest visual changes.
 13. At least one full `capture -> compare -> fix -> re-capture` loop has run after the last substantive UI edit.
-14. All required viewports in the selected viewport set pass validation.
-15. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
+14. The validation report includes a component-property table with desired value, actual value, drift, and result for each validated property.
+15. All required viewports in the selected viewport set pass validation.
+16. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
 
 "Roughly similar" is not done.
 "Good enough" is not done.

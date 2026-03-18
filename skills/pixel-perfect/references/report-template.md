@@ -61,6 +61,14 @@ Repeat this block for each required viewport.
 - Spacing deltas:
 - Color deltaE checks:
 - Pass/fail summary:
+- Component-Property Validation Table (required):
+
+| Component | Property | Desired Value | Actual Value | Drift | Result (`good` \| `bad` \| `bad_with_reason`) | Reason |
+|---|---|---|---|---|---|---|
+| header_title | font_size | 24px | 24px | 0px | good | |
+| tab_selected | color | #5B5CE6 | #625FE9 | deltaE 1.8 | bad | |
+| send_icon | icon_family | Lucide | FontAwesome6 | different family | bad_with_reason | Temporary fallback approved by user |
+
 - Marked Issue Checklist:
   - Issue id:
   - Resolved (yes/no):
