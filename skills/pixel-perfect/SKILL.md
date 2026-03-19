@@ -138,6 +138,9 @@ If there is a live inspectable source, use that as the primary measurement sourc
 If there is a Figma inspectable source, use Figma inspect data as the primary measurement source.
 If there is only an image, use screenshot-based measurement.
 
+Source selection MUST follow the Input preference order.
+Lower-priority sources SHOULD be used only as supplemental confirmation unless no higher-priority source is available.
+
 ### Phase 2, select responsive validation scope
 
 Select required viewports before implementation starts.
@@ -147,9 +150,9 @@ Minimum requirements:
 
 - if the user provides explicit viewports or devices, use exactly those
 - otherwise classify source and choose the default viewport set from the playbook
-- record source classification, selected viewport set, and selection reason in the plan
-- validation must pass at every required viewport in the selected set
-- any deviation from defaults must be explicitly justified in the report
+- source classification, selected viewport set, and selection reason MUST be recorded in the plan
+- validation MUST pass at every required viewport in the selected set
+- any deviation from defaults MUST be explicitly justified in the report
 
 ### Phase 3, inspect and measure
 
@@ -228,7 +231,7 @@ Measure from inspect values first, then use exported or captured frame images fo
 
 Before writing the detailed specification, write a concise execution plan.
 
-This plan should include:
+This plan MUST include:
 
 - source type
 - measurement approach
@@ -272,6 +275,7 @@ Required sections:
 10. `Platform translation notes`: documents renderer translation constraints without redesign.
 
 For required fields and example outputs for each section, use `references/specification-playbook.md`.
+All 10 required specification sections MUST be present before implementation starts.
 
 ### Phase 6, acceptance contract (mandatory before implementation)
 
@@ -330,6 +334,8 @@ For each required viewport in the selected viewport set, capture screenshots of:
 - any area that visually differs from the reference
 
 Use the exact viewport size declared in the plan for each pass.
+Viewport sizes MUST match the plan exactly.
+Required screenshots for each viewport MUST be captured.
 
 ### Phase 9, visual validation
 

@@ -39,3 +39,7 @@
 ## Notes
 1. Prefer measured DOM/computed values over visual estimates.
 2. If a value appears inconsistent, re-measure before implementing.
+
+Normative rules:
+1. Measurements MUST use DOM/computed values when available.
+2. Inconsistent values SHOULD be re-measured before implementation.

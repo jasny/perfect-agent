@@ -4,15 +4,15 @@ Use this playbook for Phase 5 to produce a concrete, implementation-ready UI spe
 
 ## Overall Concept
 The Phase 5 specification is an implementation contract.
-1. It must allow implementation without reopening the source.
-2. It must separate direct measurements from estimates.
-3. It must surface unresolved risk before coding starts.
+1. It MUST allow implementation without reopening the source.
+2. It MUST separate direct measurements from estimates.
+3. It MUST surface unresolved risk before coding starts.
 
 ## Spec Requirements
-1. Every major visible element is represented.
-2. Every critical value is tagged as `measured` or `estimated`.
-3. Every estimated value has a refinement note.
-4. Missing assets have an explicit user decision recorded.
+1. Every major visible element MUST be represented.
+2. Every critical value MUST be tagged as `measured` or `estimated`.
+3. Every estimated value MUST have a refinement note.
+4. Missing assets MUST have an explicit user decision recorded.
 
 ## Required Sections, Detailed Guidance, and Example Outputs
 

@@ -1,10 +1,10 @@
 # Responsive Scope Playbook
 
 ## Selection Rules
-1. If the user specifies viewports/devices, use exactly those.
+1. If the user specifies viewports/devices, they MUST be used exactly as specified.
 2. If unspecified, classify source and use default set.
-3. Record classification + set in the plan before coding.
-4. All required viewports must pass validation.
+3. Classification and selected viewport set MUST be recorded in the plan before coding.
+4. All required viewports MUST pass validation.
 
 ## Source Classification
 1. Use `web-responsive` when structure changes with width.

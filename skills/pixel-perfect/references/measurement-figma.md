@@ -45,3 +45,7 @@
 1. Prefer inspect values over visual approximation.
 2. If preview and inspect disagree, treat inspect values as source of truth and confirm visually.
 3. If a required asset is unavailable in target runtime, request explicit user decision per asset parity policy.
+
+Normative rules:
+1. Inspect values MUST be primary when available.
+2. Asset gaps MUST trigger explicit user decision before substantial implementation.

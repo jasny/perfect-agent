@@ -47,3 +47,7 @@
 - `baseline_method`
 - `confidence` (`measured` or `estimated`)
 - `notes`
+
+Normative rules:
+1. Final numeric values MUST NOT rely on LLM-only visual estimation.
+2. Confidence tags (`measured` or `estimated`) MUST be present for each critical value.
