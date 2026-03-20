@@ -12,3 +12,6 @@ Use a skill explicitly when the task matches it. Do not treat these as default c
 
 Reproduces a UI as exactly as possible from a reference (Figma, live source, or image). Enforces a strict process: source selection, measurement, spec-first implementation, multi-viewport capture, objective visual validation, and refinement until thresholds pass.
 
+### tailwind-to-cva
+
+Migrates React + TypeScript + Tailwind projects from utility-class-heavy feature code to CVA-based styling and normalized `ui/` component wrappers. Enforces an incremental module-by-module migration loop with hard validation gates.
