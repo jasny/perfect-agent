@@ -10,8 +10,8 @@ Use a skill explicitly when the task matches it. Do not treat these as default c
 
 ### pixel-perfect
 
-Reproduces a UI as exactly as possible from a reference (Figma, live source, or image). Enforces a strict process: source selection, measurement, spec-first implementation, multi-viewport capture, objective visual validation, and refinement until thresholds pass.
+Agents naturally drift when copying a design: spacing rounds, colors approximate, breakpoints get skipped. Use this skill when you need the output to actually match a reference (Figma, screenshot, or live page), not just resemble it. The result is a component that passes measurable visual thresholds at every viewport, not one that looks "close enough" on a single glance.
 
 ### tailwind-to-cva
 
-Migrates React + TypeScript + Tailwind projects from utility-class-heavy feature code to CVA-based styling and normalized `ui/` component wrappers. Supports two migration styles: `consistent` (recommended, allows minor visual/layout differences for cleaner contracts) and `precise` (preserves exact current style/layout). Enforces an incremental module-by-module migration loop with hard validation gates.
+Utility-heavy Tailwind code scatters styling logic across feature files, making variants implicit and hard to reuse. CVA (Class Variance Authority) centralizes that into explicit, typed variant definitions so each component has one place that owns its styles. This skill migrates a React + TypeScript + Tailwind codebase to CVA-based components with normalized `ui/` wrappers. The result is less duplicated utility code, fewer tokens for the agent to reason about, and a more consistent UI because variants are defined once and shared rather than re-implemented per feature. Choose `consistent` mode (default) when you want better contracts with minimal visual change, or `precise` mode when you cannot tolerate any layout drift.
