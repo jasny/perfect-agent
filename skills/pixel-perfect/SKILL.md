@@ -118,7 +118,7 @@ Use these references for detailed execution guidance:
 - `references/report-template.md`
 - `references/responsive-scope-playbook.md`
 - `references/measurement-playbook.md` (index)
-- `references/measurement-playwright.md`
+- `references/measurement-chrome-devtools.md`
 - `references/measurement-image.md`
 - `references/measurement-figma.md`
 - `references/specification-playbook.md`
@@ -158,8 +158,8 @@ Minimum requirements:
 
 #### Mode A, live inspectable source
 
-Use browser tooling such as Playwright to inspect the rendered UI directly.
-Use the exact measurement sequence in `references/measurement-playwright.md`.
+Use browser tooling such as Chrome DevTools MCP to inspect the rendered UI directly.
+Use the exact measurement sequence in `references/measurement-chrome-devtools.md`.
 
 Measure and record:
 
@@ -243,7 +243,7 @@ Example:
 
 ```
 Source: clickable demo
-Measurement: Playwright DOM inspection plus screenshots
+Measurement: Chrome DevTools MCP DOM inspection plus screenshots
 Target: React Native screen on iPhone-sized viewport
 Validation: simulator screenshots matched against reference
 Risk: native font rendering may differ slightly from browser rendering
