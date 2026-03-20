@@ -4,8 +4,8 @@ description: >-
   Migrate React + TypeScript + Tailwind codebases from utility-class-heavy feature code to CVA-based
   styling and normalized ui/ component wrappers. TRIGGER when: user asks to convert inline Tailwind
   class logic to class-variance-authority, normalize raw primitives into reusable ui components, or
-  execute large incremental styling migrations without visual/behavior regressions. DO NOT TRIGGER
-  for redesigns, visual refreshes, or generic styling advice.
+  execute large incremental styling migrations with behavior preservation and mode-controlled visual
+  drift policy. DO NOT TRIGGER for redesigns, visual refreshes, or generic styling advice.
 ---
 
 # tailwind-to-cva
@@ -13,6 +13,11 @@ description: >-
 A skill for migrating large React + TypeScript + Tailwind codebases to CVA-driven variant contracts and normalized `ui/` components.
 
 This skill is for structured migration, not redesign.
+
+Migration style mode is required for every run:
+
+- `consistent` (recommended): allows minor visual/layout differences to reduce variant count and utility-class overrides while keeping intent and behavior stable.
+- `precise`: preserve style/layout exactly (current behavior), with no unapproved visual drift.
 
 The result is not just code. The result is:
 
@@ -41,24 +46,43 @@ Do not use this skill when the user wants:
 
 Use this skill as a strict migration loop:
 
-1. establish baseline inventory and batch scope
-2. define target component contracts for the batch
-3. implement migration with no visual/behavior drift
-4. run hard validation gates
-5. sign off or fix and re-run
+1. choose migration style mode with the user (`consistent` recommended, `precise` available)
+2. establish baseline inventory and batch scope
+3. define target component contracts for the batch
+4. implement migration with mode-aligned visual constraints
+5. run hard validation gates
+6. sign off or fix and re-run
 
 Repeat until inventory is exhausted.
 
+### Mode selection requirement
+
+The user MUST choose one style mode before implementation starts:
+
+- `consistent` SHOULD be recommended by default.
+- `precise` MUST be available when exact visual/layout preservation is required.
+- If mode is not specified, ask the user to choose. Do not infer silently.
+
+### Mode intent
+
+- `consistent`: prioritize cleaner contracts (fewer variants, fewer utility overrides, less branching duplication). Minor style/layout deltas are acceptable if behavior and component intent remain equivalent.
+- `precise`: prioritize exact preservation of rendered style/layout and interaction behavior for migrated scope.
+
+Use the selected mode to evaluate tradeoffs across contract design, implementation, and validation.
+
 ## Core rules
 
-1. Preserve behavior and visual output unless explicitly approved otherwise.
-2. Migrate incrementally by feature/module, not big-bang.
-3. Feature code MUST consume normalized `ui/` components where wrappers exist.
-4. Variant logic MUST move into `cva` definitions, not remain inline in JSX class strings.
-5. Use `cn()` when composing CVA output with consumer overrides.
-6. Variant names MUST express intent (`danger`, `ghost`, `size=large`), not color labels.
-7. Dark mode rules MUST live inside variant branches, not as separate variant dimensions.
-8. A batch is not done unless all hard validation gates pass.
+1. User-selected mode governs drift tolerance:
+- `precise`: no visual/layout drift without explicit approval.
+- `consistent`: minor visual/layout drift allowed to improve consistency and reduce override complexity.
+2. Preserve behavior unless explicitly approved otherwise.
+3. Migrate incrementally by feature/module, not big-bang.
+4. Feature code MUST consume normalized `ui/` components where wrappers exist.
+5. Variant logic MUST move into `cva` definitions, not remain inline in JSX class strings.
+6. Use `cn()` when composing CVA output with consumer overrides.
+7. Variant names MUST express intent (`danger`, `ghost`, `size=large`), not color labels.
+8. Dark mode rules MUST live inside variant branches, not as separate variant dimensions.
+9. A batch is not done unless all hard validation gates pass.
 
 ## Normative terms
 
@@ -70,10 +94,11 @@ Repeat until inventory is exhausted.
 This skill must produce for each migration run:
 
 1. a short execution plan
-2. a baseline inventory summary
-3. a batch contract and implementation notes
-4. validation results for hard gates
-5. remaining inventory and next batch
+2. selected mode and rationale
+3. a baseline inventory summary
+4. a batch contract and implementation notes
+5. validation results for hard gates
+6. remaining inventory and next batch
 
 Use the report heading schema in `references/report-template.md`.
 
@@ -88,6 +113,14 @@ Use these references for detailed execution guidance:
 - `references/validation-playbook.md`
 
 ## Workflow
+
+### Phase 0, choose style mode
+
+Before baseline work, confirm migration style mode with the user:
+
+- recommend `consistent`
+- allow explicit `precise`
+- record the selected mode in the report
 
 ### Phase 1, baseline and scope
 
@@ -128,6 +161,11 @@ Contract must follow Ownables CVA style guidance:
 - feature components import from `ui/`, not directly from primitive packages
 - class composition uses `cn(cva(...), className)`
 
+Mode-specific contract guidance:
+
+- `consistent`: merge near-duplicate style branches when semantic intent is same.
+- `precise`: keep branch granularity needed to preserve exact rendered output.
+
 ### Phase 4, implement batch migration
 
 Migrate the selected batch only.
@@ -139,6 +177,11 @@ Required implementation patterns:
 - create missing wrappers in `ui/` only when required by batch
 - preserve one-off layout utilities when they are non-branching and non-repeated
 
+Mode-specific implementation guidance:
+
+- `consistent`: prefer removing redundant variant axes and override-only utility layering.
+- `precise`: preserve utility composition and branch-specific spacing/sizing when they affect rendered layout/style.
+
 Do not convert unrelated modules in the same commit.
 
 ### Phase 5, hard validation gates
@@ -149,6 +192,9 @@ Run all required checks after migration:
 2. No new raw feature-level primitive usage where `ui/` wrappers exist.
 3. No residual inline class branching that should be a CVA variant.
 4. Type checks/tests/lint used by the repo for touched code MUST pass.
+5. Drift policy MUST match selected mode:
+- `precise`: no accepted visual/layout drift without explicit user approval.
+- `consistent`: minor drift is acceptable when documented and tied to consistency simplification.
 
 If any gate fails, the batch is not complete.
 
@@ -156,6 +202,7 @@ If any gate fails, the batch is not complete.
 
 Document:
 
+- selected mode and why
 - what was migrated
 - contracts introduced/changed
 - validation outcomes
@@ -169,16 +216,21 @@ Then proceed to the next module batch and repeat.
 Migration work is done only when all are true:
 
 1. Every migrated batch has a report using the required template.
-2. CVA contracts exist for migrated branching style logic.
-3. Normalized `ui/` wrappers are used in migrated feature code where expected.
-4. `scripts/check-styles.mjs` passes after each completed batch.
-5. No intentional visual/behavior changes were introduced without explicit approval.
-6. Remaining migration inventory is either empty or explicitly deferred.
+2. Selected mode is recorded and enforced in decisions.
+3. CVA contracts exist for migrated branching style logic.
+4. Normalized `ui/` wrappers are used in migrated feature code where expected.
+5. `scripts/check-styles.mjs` passes after each completed batch.
+6. No unapproved behavior changes were introduced.
+7. In `precise` mode, no unapproved visual/layout changes were introduced.
+8. Remaining migration inventory is either empty or explicitly deferred.
 
 ## Failure modes to avoid
 
 Do not do any of the following:
 
+- skip mode selection or silently infer mode
+- use `consistent` mode to justify broad redesign
+- claim `precise` mode while accepting unrecorded visual/layout drift
 - migrate by search-and-replace without contract design
 - keep ternary-heavy class logic inline while claiming CVA migration
 - move primitive package imports into feature code
@@ -189,15 +241,16 @@ Do not do any of the following:
 ## Example invocation phrases
 
 ```
-Use tailwind-to-cva to migrate this feature module to CVA and ui wrappers.
-Use tailwind-to-cva to normalize Tailwind-heavy JSX class logic without changing visuals.
-Use tailwind-to-cva to run an incremental migration plan across this codebase.
+Use tailwind-to-cva in consistent mode to migrate this feature module to CVA and ui wrappers.
+Use tailwind-to-cva in precise mode to normalize Tailwind-heavy JSX class logic without visual/layout drift.
+Use tailwind-to-cva and let me choose between consistent and precise before migration starts.
 ```
 
 ## Expected behavior summary
 
 This skill turns “clean up our Tailwind classes” into a strict migration process:
 
+- mode selection first (`consistent` recommended)
 - inventory first
 - contract before edits
 - bounded batch migration

@@ -32,8 +32,10 @@ If the repository keeps its own script (for example `bin/check-styles.mjs`), run
 
 ## Drift policy
 
-- visual and behavior drift are failures by default
-- any accepted drift requires explicit user approval recorded in the report
+- behavior drift is a failure by default in all modes
+- `precise` mode: visual/layout drift is a failure by default
+- `consistent` mode: minor visual/layout drift is acceptable only when documented and tied to consistency simplification
+- any non-minor accepted drift requires explicit user approval recorded in the report
 
 ## Signoff requirement
 

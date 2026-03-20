@@ -14,4 +14,4 @@ Reproduces a UI as exactly as possible from a reference (Figma, live source, or 
 
 ### tailwind-to-cva
 
-Migrates React + TypeScript + Tailwind projects from utility-class-heavy feature code to CVA-based styling and normalized `ui/` component wrappers. Enforces an incremental module-by-module migration loop with hard validation gates.
+Migrates React + TypeScript + Tailwind projects from utility-class-heavy feature code to CVA-based styling and normalized `ui/` component wrappers. Supports two migration styles: `consistent` (recommended, allows minor visual/layout differences for cleaner contracts) and `precise` (preserves exact current style/layout). Enforces an incremental module-by-module migration loop with hard validation gates.

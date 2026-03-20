@@ -4,6 +4,8 @@ Use these exact headings in this exact order.
 
 ## Execution Plan
 - Target repo/profile:
+- Mode (`consistent` recommended | `precise`):
+- Mode rationale:
 - Batch scope:
 - Migration goal:
 - Validation commands:
@@ -26,6 +28,7 @@ Use these exact headings in this exact order.
 ## Implementation Notes
 - Files/components migrated:
 - Key transformations applied:
+- Mode-specific tradeoffs accepted:
 - Behavior-preservation notes:
 - Deferred items:
 

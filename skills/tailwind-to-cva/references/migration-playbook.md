@@ -2,15 +2,23 @@
 
 Migrate in bounded batches with explicit contracts.
 
+## Mode selection
+
+Confirm migration style mode before implementation:
+
+- `consistent` (recommended): allow minor style/layout differences to reduce variant count and utility overrides.
+- `precise`: preserve style/layout exactly for migrated scope.
+
 ## Standard transformation sequence
 
-1. Freeze batch scope.
-2. Define/confirm target component contracts.
-3. Convert inline class branching to CVA variants.
-4. Replace raw primitives with `ui/` wrappers where available.
-5. Introduce missing wrappers only if needed for batch scope.
-6. Preserve visual output and behavior.
-7. Run hard validation gates.
+1. Confirm selected mode (`consistent` or `precise`).
+2. Freeze batch scope.
+3. Define/confirm target component contracts.
+4. Convert inline class branching to CVA variants.
+5. Replace raw primitives with `ui/` wrappers where available.
+6. Introduce missing wrappers only if needed for batch scope.
+7. Apply mode-specific drift policy.
+8. Run hard validation gates.
 
 ## Transformation patterns
 
@@ -34,12 +42,18 @@ Migrate in bounded batches with explicit contracts.
 ## Guardrails
 
 - no unrelated refactors inside batch
-- no style redesign while normalizing
+- no style redesign while normalizing (`consistent` still allows only minor deltas)
 - no broad token rewrites unless explicitly requested
 - preserve event handling, semantics, focus behavior, and accessibility contracts
 
+## Mode-specific guidance
+
+- `consistent`: merge near-duplicate variant branches and remove override-only utility layering when semantics are unchanged.
+- `precise`: keep branch detail needed for exact rendered style/layout parity.
+
 ## Batch completion checklist
 
+- selected mode documented
 - contract documented
 - implementation complete for scoped hotspots
 - validation gates all green
