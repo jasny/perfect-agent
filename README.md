@@ -20,4 +20,6 @@ Agents naturally drift when copying a design: spacing rounds, colors approximate
 
 ### tailwind-to-cva
 
-Utility-heavy Tailwind code scatters styling logic across feature files, making variants implicit and hard to reuse. CVA (Class Variance Authority) centralizes that into explicit, typed variant definitions so each component has one place that owns its styles. This skill migrates a React + TypeScript + Tailwind codebase to CVA-based components with normalized `ui/` wrappers. The result is less duplicated utility code, fewer tokens for the agent to reason about, and a more consistent UI because variants are defined once and shared rather than re-implemented per feature. Choose `consistent` mode (default) when you want better contracts with minimal visual change, or `precise` mode when you cannot tolerate any layout drift.
+Utility-heavy Tailwind code scatters styling logic across feature files, making variants implicit and hard to reuse. CVA (Class Variance Authority) centralizes that into explicit, typed variant definitions so each component has one place that owns its styles. This skill migrates a React + TypeScript + Tailwind codebase to CVA-based components with normalized `ui/` wrappers.
+
+The result is less duplicated utility code, fewer tokens for the agent to reason about, and a more consistent UI because variants are defined once and shared rather than re-implemented per feature. Choose `consistent` mode (default) when you want better contracts with minimal visual change, or `precise` mode when you cannot tolerate any layout drift.
