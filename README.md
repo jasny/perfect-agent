@@ -6,6 +6,12 @@ Skills are explicit and situational, not general workflow helpers. Skills are op
 
 Use a skill explicitly when the task matches it. Do not treat these as default coding flow instructions.
 
+## Install
+
+```sh
+npx skills add jasny/perfect-agent
+```
+
 ## Skills
 
 ### pixel-perfect
