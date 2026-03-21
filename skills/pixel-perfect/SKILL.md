@@ -111,6 +111,15 @@ The agent must not jump straight into coding without first creating the specific
 
 Use the report heading schema in `references/report-template.md`.
 
+When the agent believes the task is complete, it MUST provide a final user-verification handoff that includes all of the following:
+
+1. an explicit statement that it believes the implementation is done
+2. a side-by-side visual comparison showing:
+   - one image of the reference/design
+   - one image of the actual rendered app
+3. a direct request for user verification that asks whether anything is still missing
+4. an explicit prompt to list missed details if the user does not approve
+
 ## References
 
 Use these references for detailed execution guidance:
@@ -449,6 +458,9 @@ The skill is done only when all of the following are true:
 14. The validation report includes a component-property table with desired value, actual value, drift, and result for each validated property.
 15. All required viewports in the selected viewport set pass validation.
 16. No obvious mismatches remain in spacing, typography, colors, border radius, alignment, or section sizing.
+17. The final response includes an explicit "I believe this is done" statement.
+18. The final response includes side-by-side reference and actual-app images for user review.
+19. The final response asks the user to verify completion and, if not complete, to specify what was missed.
 
 "Roughly similar" is not done.
 "Good enough" is not done.
@@ -469,6 +481,7 @@ Do not do any of the following:
 - make subjective UX improvements
 - stop after the first pass
 - declare success without screenshot comparison
+- end without explicit user verification request and missed-detail prompt
 
 ## Example invocation phrases
 

@@ -85,3 +85,11 @@ Repeat this block for each required viewport.
 - Remaining mismatch list:
 - Root cause:
 - Next refinement action:
+
+## User Verification Handoff
+- Done statement ("I believe this is done"):
+- Side-by-side visual proof:
+  - Reference/design image:
+  - Actual app image:
+- User verification question asked (yes/no):
+- Missed-detail prompt included (yes/no):
