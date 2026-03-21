@@ -38,6 +38,15 @@ Do not use this skill when the user wants:
 - a looser "something like this" implementation
 - UX improvements instead of replication
 
+## Prerequisites
+
+- MCP servers:
+  - Chrome DevTools MCP (preferred) or Playwright MCP (fallback)
+- Command-line tools:
+  - `jq`
+  - `awk`
+  - ImageMagick: `magick` (v7) or `convert` + `compare` + `identify` (v6)
+
 ## How to use this skill
 
 Use this skill as a strict execution loop:
