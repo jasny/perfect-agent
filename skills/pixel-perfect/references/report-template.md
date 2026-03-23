@@ -1,5 +1,44 @@
 # Report Template
 
+Use one of these two modes:
+
+1. `Iteration report` for refine loops (LLM-facing, compact, delta-oriented).
+2. `Final report` for completion handoff (full-fidelity, complete audit trail).
+
+Do not enforce fixed token caps. Keep iteration output concise by structure (failures and deltas only), not by hard limits.
+
+---
+
+## Iteration Report
+- Mode: `iteration`
+- Validation artifact file:
+- Previous summary file (if any):
+- Issue ledger file (if any):
+- Profile:
+- Overall status:
+- Global diff:
+- Failed check count:
+- New failures vs previous summary:
+- Resolved failures vs previous summary:
+
+### Viewport Deltas
+Repeat this block for each required viewport.
+
+#### Viewport: <width>x<height>
+- Status:
+- Failed checks only:
+- Top drift offenders:
+- Changed component-property rows only:
+- Marked issue status changes only:
+
+### Next Action
+- Highest-priority fix target:
+- Re-capture needed (yes/no):
+- Targeted slice requests needed (if any):
+
+---
+
+## Final Report
 Use these exact headings in this exact order.
 
 ## Execution Plan

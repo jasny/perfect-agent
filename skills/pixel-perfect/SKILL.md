@@ -120,6 +120,13 @@ The agent must not jump straight into coding without first creating the specific
 
 Use the report heading schema in `references/report-template.md`.
 
+Use two reporting modes:
+
+- `iteration` mode during refine loops (compact summary projection, changed/failing items only)
+- `final` mode at completion handoff (full-fidelity report)
+
+Do not enforce fixed token limits. Keep intermediate output concise by using artifact projections instead of repeating full report content.
+
 When the agent believes the task is complete, it MUST provide a final user-verification handoff that includes all of the following:
 
 1. an explicit statement that it believes the implementation is done
@@ -355,6 +362,12 @@ Use the exact viewport size declared in the plan for each pass.
 Viewport sizes MUST match the plan exactly.
 Required screenshots for each viewport MUST be captured.
 
+Artifact output requirements:
+
+- for each viewport, save capture artifacts and validation input files to disk
+- for each viewport, run `./scripts/validate-visual.sh` and save JSON output (for example `validation/<viewport>.json`)
+- treat validator JSON artifacts as the numeric source of truth
+
 ### Phase 9, visual validation
 
 Compare the implementation screenshots against the reference for each required viewport.
@@ -379,6 +392,7 @@ Check specifically for:
 
 Also run objective diff checks and record numeric results.
 Use the validation flow and reporting format in `references/validation-playbook.md`.
+For LLM-facing updates, first project validator artifacts into a compact summary with `./scripts/summarize-validation.sh`.
 
 Validation profiles:
 
@@ -417,6 +431,12 @@ Marked issue resolution:
 For every run, report the selected profile and why it was selected before reporting metrics.
 For every run, report viewport-level metrics for every required viewport.
 
+LLM input projection rules:
+
+- during iterative loops, provide the model only the projection summary (failed checks, top drifts, deltas, and next actions)
+- do not re-feed full validation JSON unless a targeted slice is required to resolve a specific mismatch
+- when additional detail is needed, load only targeted slices (single viewport, single issue id, or specific check type)
+
 ### Phase 10, refine
 
 Adjust the code to remove visible mismatches.
@@ -446,6 +466,12 @@ If unresolved mismatches remain after 10 loops, the report MUST include a detail
 - the recommended next action for each unresolved issue
 
 If blocked, document the limitation and the remaining discrepancy.
+
+Iteration reporting rules:
+
+- each refine loop MUST produce an `iteration` report block from projection output
+- iteration report SHOULD include changed statuses and failing rows only
+- full report sections and exhaustive tables are required only in the `final` report mode at handoff
 
 ## Definition of done
 

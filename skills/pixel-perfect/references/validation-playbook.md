@@ -12,6 +12,7 @@
 
 ## Canonical Tooling
 Use the script `../scripts/validate-visual.sh` as the canonical metric computation path.
+Use `../scripts/summarize-validation.sh` as the canonical projection path for LLM-facing updates.
 
 Dependencies:
 - ImageMagick CLI:
@@ -40,6 +41,19 @@ Minimal run (global metric only):
   --implementation /path/to/implementation.png \
   --profile strict
 ```
+
+Projection run (compact LLM-facing summary):
+```bash
+./scripts/summarize-validation.sh \
+  --report /path/to/report.json \
+  --mode iteration \
+  --format md
+```
+
+Projection rule:
+1. Validator JSON is the source of truth.
+2. Iteration updates SHOULD use summary projections (failed checks + deltas only).
+3. Full-fidelity report sections are still required for final handoff.
 
 ## Validation Artifact Priority
 When user-marked comparison screenshots are provided:
@@ -164,6 +178,7 @@ For each required viewport, report:
 4. Top mismatches and next action
 
 The script output JSON is the source of truth for numeric values.
+Iteration-mode updates SHOULD reference projection output and avoid reprinting unchanged passing details.
 
 ## Component-Property Validation Table
 For each required viewport, the report MUST include a component-property validation table.
